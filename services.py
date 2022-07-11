@@ -145,7 +145,6 @@ def get_translated_text(*, dest_lang="pl", img):
 
 if __name__ == '__main__':
     img = cv2.imread("bigsleep.jpg")
-    height, width, _ = img.shape
     data = get_translated_text(img=img)
     print(data)
 
