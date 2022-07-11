@@ -5,8 +5,8 @@ import numpy as np
 import cv2
 import io
 
-from SzybkieApi.ApiOCR.schemas import TextTranslation
-from SzybkieApi.ApiOCR.services import get_translated_image, get_translated_text
+from schemas import TextTranslation
+from services import get_translated_image, get_translated_text
 
 app = fastapi.FastAPI(debug=True)
 
