@@ -1,4 +1,4 @@
-import fastapi
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.responses import Response
 import uvicorn
 import numpy as np
@@ -8,7 +8,7 @@ import io
 from schemas import TextTranslation
 from services import get_translated_image, get_translated_text
 
-app = fastapi.FastAPI(debug=True)
+app = FastAPI(debug=True)
 
 languages = ('en', 'de', 'fr', 'hi', 'pl', 'sp')
 
@@ -24,7 +24,7 @@ def languages_list():
 
 
 @app.post("/translation_image")
-async def translation_image(target_language: str = fastapi.Form(...), img: fastapi.UploadFile = fastapi.File(...)):
+async def translation_image(target_language: str = Form(...), img: UploadFile = File(...)):
     target_language = target_language.lower()
     if target_language in languages:
         try:
@@ -39,15 +39,15 @@ async def translation_image(target_language: str = fastapi.Form(...), img: fasta
 
             return Response(content=to_bytes_img.getvalue(), headers={"target_lang": target_language}, media_type="image/png")
         except IndexError:
-            raise fastapi.HTTPException(status_code=500, detail=f"Something went wrong")
+            raise HTTPException(status_code=500, detail=f"Something went wrong")
 
     else:
-        raise fastapi.HTTPException(status_code=400, detail=f"There is no such language like: {target_language}. "
+        raise HTTPException(status_code=400, detail=f"There is no such language like: {target_language}. "
                                                             f"Here's list of available languages: {languages}")
 
 
 @app.post("/translation_text", response_model=TextTranslation)
-async def translation_text(target_language: str = fastapi.Form(...), img: fastapi.UploadFile = fastapi.File(...)):
+async def translation_text(target_language: str = Form(...), img: UploadFile = File(...)):
     target_language = target_language.lower()
     if target_language in languages:
         try:
@@ -59,9 +59,9 @@ async def translation_text(target_language: str = fastapi.Form(...), img: fastap
 
             return data
         except IndexError:
-            raise fastapi.HTTPException(status_code=500, detail=f"Something went wrong")
+            raise HTTPException(status_code=500, detail=f"Something went wrong")
     else:
-        raise fastapi.HTTPException(status_code=400, detail=f"There is no such language like: {target_language}. "
+        raise HTTPException(status_code=400, detail=f"There is no such language like: {target_language}. "
                                                             f"Here's list of available languages: {languages}")
 
 
